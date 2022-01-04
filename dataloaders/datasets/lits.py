@@ -71,6 +71,7 @@ class LiverSegmentation(Dataset):
             tr.RandomRotate(30),
             tr.RandomHorizontalFlip(),
             # tr.RandomScaleCrop(base_size=self.args.base_size, crop_size=self.args.crop_size),
+            tr.FixedResize(size=self.args.base_size),
             tr.RandomGaussianBlur(),
             tr.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             tr.ToTensor()])
@@ -81,6 +82,7 @@ class LiverSegmentation(Dataset):
 
         composed_transforms = transforms.Compose([
             # tr.FixScaleCrop(crop_size=self.args.crop_size),
+            tr.FixedResize(size=self.args.base_size),
             tr.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             tr.ToTensor()])
 
