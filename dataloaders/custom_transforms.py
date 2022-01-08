@@ -60,7 +60,7 @@ class RandomHorizontalFlip(object):
 
 class RandomRotate(object):
     def __init__(self, degree):
-        self.degree = degree
+        self.degree = random.uniform(-degree, degree)
 
     def __call__(self, sample):
         img = sample['image']

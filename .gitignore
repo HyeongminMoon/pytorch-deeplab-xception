@@ -1,3 +1,5 @@
+val/
+models/
 datasets/
 !dataloaders/datasets/
 # Byte-compiled / optimized / DLL files
