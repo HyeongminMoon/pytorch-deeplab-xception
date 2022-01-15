@@ -18,6 +18,7 @@ class LiverSegmentation(Dataset):
                  args,
                  base_dir=Path.db_root_dir('lits_liver'),
                  split='train',
+                 study_num=0
                  ):
         """
         :param base_dir: path to lits dataset directory
@@ -31,7 +32,7 @@ class LiverSegmentation(Dataset):
         if split != "val":
             self.df = self.df[self.df['liver_mask_empty'] == True]
         self.train_df = self.df[self.df['study_number']<111]
-        self.test_df = self.df[self.df['study_number']>=111]
+        self.test_df = self.df[self.df['study_number']==study_num]
         
         if isinstance(split, str):
             self.split = [split]
