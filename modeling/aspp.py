@@ -65,7 +65,7 @@ class ASPP(nn.Module):
         self.relu = nn.ReLU()
         
         if self.use_attention:
-            self.bam1 = BAM(128)
+            self.bam1 = BAM(256)
         
         self.dropout = nn.Dropout(0.5)
         self._init_weight()
