@@ -19,7 +19,7 @@ class DeepLab(nn.Module):
             BatchNorm = nn.BatchNorm2d
 
         self.backbone = build_backbone(backbone, output_stride, BatchNorm)
-        if backbone == 'xception_aspp_atention':
+        if backbone == 'xception_aspp_attention':
             use_aspp_attention = True
         else:
             use_aspp_attention = False
