@@ -5,6 +5,10 @@ def build_backbone(backbone, output_stride, BatchNorm):
         return resnet.ResNet101(output_stride, BatchNorm)
     elif backbone == 'xception':
         return xception.AlignedXception(output_stride, BatchNorm)
+    elif backbone == 'xception_encoder_attention':
+        return xception.AlignedXception(output_stride, BatchNorm, pretrained=False, use_attention=True)
+    elif backbone == 'xception_aspp_attention':
+        return xception.AlignedXception(output_stride, BatchNorm)
     elif backbone == 'drn':
         return drn.drn_d_54(BatchNorm)
     elif backbone == 'mobilenet':

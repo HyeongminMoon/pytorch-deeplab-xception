@@ -42,6 +42,7 @@ class Trainer(object):
         # Define Optimizer
         optimizer = torch.optim.SGD(train_params, momentum=args.momentum,
                                     weight_decay=args.weight_decay, nesterov=args.nesterov)
+        # optimizer = torch.optim.Adam(train_params, weight_decay=args.weight_decay)
 
         # Define Criterion
         # whether to use class balanced weights
@@ -121,7 +122,7 @@ class Trainer(object):
         print('Loss: %.3f' % train_loss)
 
         # if self.args.no_val:
-        if True:
+        if epoch % 10 == 0:
             # save checkpoint every epoch
             is_best = False
             self.saver.save_checkpoint({
@@ -181,7 +182,7 @@ class Trainer(object):
 def main():
     parser = argparse.ArgumentParser(description="PyTorch DeeplabV3Plus Training")
     parser.add_argument('--backbone', type=str, default='resnet',
-                        choices=['resnet', 'xception', 'drn', 'mobilenet'],
+                        choices=['resnet', 'xception', 'xception_encode_attention', 'xception_aspp_attention', 'drn', 'mobilenet'],
                         help='backbone name (default: resnet)')
     parser.add_argument('--out-stride', type=int, default=16,
                         help='network output stride (default: 8)')

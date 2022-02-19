@@ -32,7 +32,7 @@ class _ASPPModule(nn.Module):
                 m.bias.data.zero_()
 
 class ASPP(nn.Module):
-    def __init__(self, backbone, output_stride, BatchNorm):
+    def __init__(self, backbone, output_stride, BatchNorm, use_attention=False):
         super(ASPP, self).__init__()
         if backbone == 'drn':
             inplanes = 512
@@ -47,6 +47,8 @@ class ASPP(nn.Module):
         else:
             raise NotImplementedError
 
+        self.use_attention = use_attention    
+        
         self.aspp1 = _ASPPModule(inplanes, 256, 1, padding=0, dilation=dilations[0], BatchNorm=BatchNorm)
         self.aspp2 = _ASPPModule(inplanes, 256, 3, padding=dilations[1], dilation=dilations[1], BatchNorm=BatchNorm)
         self.aspp3 = _ASPPModule(inplanes, 256, 3, padding=dilations[2], dilation=dilations[2], BatchNorm=BatchNorm)
@@ -59,6 +61,10 @@ class ASPP(nn.Module):
         self.conv1 = nn.Conv2d(1280, 256, 1, bias=False)
         self.bn1 = BatchNorm(256)
         self.relu = nn.ReLU()
+        
+        if self.use_attention:
+            self.bam1 = BAM(128)
+        
         self.dropout = nn.Dropout(0.5)
         self._init_weight()
 
@@ -75,6 +81,9 @@ class ASPP(nn.Module):
         x = self.bn1(x)
         x = self.relu(x)
 
+        if self.use_attention:
+            x = self.bam1(x)
+        
         return self.dropout(x)
 
     def _init_weight(self):
@@ -91,5 +100,5 @@ class ASPP(nn.Module):
                 m.bias.data.zero_()
 
 
-def build_aspp(backbone, output_stride, BatchNorm):
-    return ASPP(backbone, output_stride, BatchNorm)
+def build_aspp(backbone, output_stride, BatchNorm, use_attention):
+    return ASPP(backbone, output_stride, BatchNorm, use_attention)

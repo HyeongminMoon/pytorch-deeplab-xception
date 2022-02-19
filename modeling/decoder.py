@@ -9,7 +9,7 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         if backbone == 'resnet' or backbone == 'drn':
             low_level_inplanes = 256
-        elif backbone == 'xception':
+        elif backbone == 'xception' or backbone == 'xception_encoder_attention' or backbone == 'xception_aspp_attention':
             low_level_inplanes = 128
         elif backbone == 'mobilenet':
             low_level_inplanes = 24

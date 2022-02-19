@@ -1,1 +1,2 @@
-CUDA_VISIBLE_DEVICES=0 python train_ori.py --backbone xception --lr 0.001 --workers 4 --epochs 100 --batch-size 24 --base-size 256 --crop-size 256 --gpu-ids 0 --checkname resume-liver-bce-crop --eval-interval 1 --loss-type ce --dataset lits_liver --resume run/lits_liver/deeplab-xception-liver-bce-crop/experiment_0/checkpoint.pth.tar
+python train.py --backbone xception_aspp_attention --lr 0.001 --workers 4 --epochs 500 --batch-size 24 --base-size 256 --crop-size 256 --gpu-ids 0 --checkname liver-att --eval-interval 1 --loss-type ce --dataset lits_liver 
+# --resume models/95_liver33.pth.tar
