@@ -4,21 +4,28 @@ import torch.nn as nn
 import torch.nn.functional as F
 from modeling.sync_batchnorm.batchnorm import SynchronizedBatchNorm2d
 
+from .bam import BAM
+
 class Decoder(nn.Module):
-    def __init__(self, num_classes, backbone, BatchNorm):
+    def __init__(self, num_classes, backbone, BatchNorm, use_attention=False):
         super(Decoder, self).__init__()
         if backbone == 'resnet' or backbone == 'drn':
             low_level_inplanes = 256
-        elif backbone == 'xception' or backbone == 'xception_encoder_attention' or backbone == 'xception_aspp_attention':
+        elif 'xception' in backbone:
             low_level_inplanes = 128
         elif backbone == 'mobilenet':
             low_level_inplanes = 24
         else:
             raise NotImplementedError
 
+        self.use_attention = use_attention
+            
         self.conv1 = nn.Conv2d(low_level_inplanes, 48, 1, bias=False)
         self.bn1 = BatchNorm(48)
         self.relu = nn.ReLU()
+        if self.use_attention:
+            self.bam1 = BAM(48)
+        
         self.last_conv = nn.Sequential(nn.Conv2d(304, 256, kernel_size=3, stride=1, padding=1, bias=False),
                                        BatchNorm(256),
                                        nn.ReLU(),
@@ -35,9 +42,13 @@ class Decoder(nn.Module):
         low_level_feat = self.conv1(low_level_feat)
         low_level_feat = self.bn1(low_level_feat)
         low_level_feat = self.relu(low_level_feat)
+        
+        if self.use_attention:
+            low_level_feat = self.bam1(low_level_feat)
 
         x = F.interpolate(x, size=low_level_feat.size()[2:], mode='bilinear', align_corners=True)
         x = torch.cat((x, low_level_feat), dim=1)
+        
         x = self.last_conv(x)
 
         return x
@@ -53,5 +64,5 @@ class Decoder(nn.Module):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
 
-def build_decoder(num_classes, backbone, BatchNorm):
-    return Decoder(num_classes, backbone, BatchNorm)
+def build_decoder(num_classes, backbone, BatchNorm, use_attention=False):
+    return Decoder(num_classes, backbone, BatchNorm, use_attention)

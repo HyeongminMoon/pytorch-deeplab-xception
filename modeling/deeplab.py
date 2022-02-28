@@ -24,7 +24,11 @@ class DeepLab(nn.Module):
         else:
             use_aspp_attention = False
         self.aspp = build_aspp(backbone, output_stride, BatchNorm, use_aspp_attention)
-        self.decoder = build_decoder(num_classes, backbone, BatchNorm)
+        if backbone == 'xception_decoder_attention':
+            use_decoder_attention = True
+        else:
+            use_decoder_attention = False
+        self.decoder = build_decoder(num_classes, backbone, BatchNorm, use_decoder_attention)
 
         self.freeze_bn = freeze_bn
 
