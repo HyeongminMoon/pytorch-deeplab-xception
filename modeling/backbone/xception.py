@@ -6,6 +6,7 @@ import torch.utils.model_zoo as model_zoo
 from modeling.sync_batchnorm.batchnorm import SynchronizedBatchNorm2d
 # from modeling.cbam import *
 from modeling.bam import BAM
+from modeling.coordconv import CoordConv1d, CoordConv2d, CoordConv3d
 
 def fixed_padding(inputs, kernel_size, dilation):
     kernel_size_effective = kernel_size + (kernel_size - 1) * (dilation - 1)
@@ -98,7 +99,7 @@ class AlignedXception(nn.Module):
     Modified Alighed Xception
     """
     def __init__(self, output_stride, BatchNorm,
-                 pretrained=True, use_attention=False):
+                 pretrained=True, use_attention=False, use_coordconv=False):
         super(AlignedXception, self).__init__()
 
         if output_stride == 16:
@@ -115,7 +116,11 @@ class AlignedXception(nn.Module):
         self.use_attention = use_attention
             
         # Entry flow
-        self.conv1 = nn.Conv2d(3, 32, 3, stride=2, padding=1, bias=False)
+        if use_coordconv:
+            print("Using coordconv")
+            self.conv1 = CoordConv2d(3, 32, 3, stride=2, padding=1, bias=False, with_r=True)
+        else:
+            self.conv1 = nn.Conv2d(3, 32, 3, stride=2, padding=1, bias=False)
         self.bn1 = BatchNorm(32)
         self.relu = nn.ReLU(inplace=True)
 
@@ -327,6 +332,7 @@ class AlignedXception(nn.Module):
 
 
     def _load_pretrained_model(self):
+        print("Using pretrained")
         pretrain_dict = model_zoo.load_url('http://data.lip6.fr/cadene/pretrainedmodels/xception-b5690688.pth')
         model_dict = {}
         state_dict = self.state_dict()

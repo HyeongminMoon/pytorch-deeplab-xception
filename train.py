@@ -182,7 +182,7 @@ class Trainer(object):
 def main():
     parser = argparse.ArgumentParser(description="PyTorch DeeplabV3Plus Training")
     parser.add_argument('--backbone', type=str, default='resnet',
-                        choices=['resnet', 'xception', 'xception_encode_attention', 'xception_aspp_attention', 'drn', 'mobilenet'],
+                        choices=['resnet', 'xception', 'xception_encode_attention', 'xception_aspp_attention', 'xception_decoder_attention', 'xception_coordconv', 'drn', 'mobilenet'],
                         help='backbone name (default: resnet)')
     parser.add_argument('--out-stride', type=int, default=16,
                         help='network output stride (default: 8)')

@@ -11,6 +11,8 @@ def build_backbone(backbone, output_stride, BatchNorm):
         return xception.AlignedXception(output_stride, BatchNorm)
     elif backbone == 'xception_decoder_attention':
         return xception.AlignedXception(output_stride, BatchNorm)
+    elif backbone == 'xception_coordconv':
+        return xception.AlignedXception(output_stride, BatchNorm, pretrained=True, use_coordconv=True)
     elif backbone == 'drn':
         return drn.drn_d_54(BatchNorm)
     elif backbone == 'mobilenet':

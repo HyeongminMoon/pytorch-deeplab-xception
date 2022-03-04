@@ -1,2 +1,2 @@
-python train.py --backbone xception_aspp_attention --lr 0.001 --workers 4 --epochs 500 --batch-size 24 --base-size 256 --crop-size 256 --gpu-ids 0 --checkname liver-att --eval-interval 1 --loss-type ce --dataset lits_liver 
+python train.py --backbone xception_coordconv --lr 0.001 --workers 4 --epochs 200 --batch-size 24 --base-size 256 --crop-size 256 --gpu-ids 0 --checkname tumor-coordconv --eval-interval 1 --loss-type ce --dataset lits_tumor --resume models/liver_coordconv.pth.tar --ft
 # --resume models/95_liver33.pth.tar
